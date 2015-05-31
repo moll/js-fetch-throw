@@ -1,7 +1,7 @@
 var Sinon = require("sinon")
 var HttpError = require("standard-http-error")
 var FetchErrorify = require("root/lib/fetch/errorify")
-var fetch = FetchErrorify(require("root/lib/html5/fetch").fetch)
+var fetch = FetchErrorify(window.fetch)
 
 describe("FetchErrorify", function() {
   beforeEach(function() {
