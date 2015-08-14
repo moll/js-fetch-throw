@@ -1,11 +1,11 @@
 var Sinon = require("sinon")
 var HttpError = require("standard-http-error")
-var ErrorifyFetch = require("root/lib/fetch/errorify_fetch")
-var fetch = ErrorifyFetch(window.fetch)
+var ErrorifyFetch = require("..")
+var fetch = ErrorifyFetch(require("./fetch"))
 
 describe("ErrorifyFetch", function() {
   beforeEach(function() {
-    var xhr = window.XMLHttpRequest = Sinon.FakeXMLHttpRequest
+    var xhr = global.XMLHttpRequest = Sinon.FakeXMLHttpRequest
     xhr.onCreate = Array.prototype.push.bind(this.requests = [])
   })
 
