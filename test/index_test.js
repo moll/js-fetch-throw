@@ -77,7 +77,7 @@ describe("ErrorifyFetch", function() {
     var err
     try { yield res } catch (ex) { err = ex }
     err.must.be.an.error(FetchError, "Network request failed")
-    err.code.must.equal(-1)
+    err.code.must.equal(0)
     err.must.have.enumerable("error")
     err.error.must.be.an.error(TypeError, "Network request failed")
 

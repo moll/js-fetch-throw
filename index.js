@@ -28,7 +28,7 @@ function onError(fetch, url, opts, err) {
   if (err instanceof TypeError) {
     var Request = fetch.Request || global.Request
 
-    throw new FetchError(-1, err.message, {
+    throw new FetchError(0, err.message, {
       request: Request && new Request(url, opts),
       error: err
     })
