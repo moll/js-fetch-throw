@@ -9,14 +9,13 @@ module.exports = function(fetch) {
 }
 
 function errorifyResponse(fetch, url, opts, res) {
-  if (res.type === "error" || res.status >= 400 && res.status < 600) {
-    // https://fetch.spec.whatwg.org/#concept-network-error
-    var Request = fetch.Request || global.Request
-    var msg = res.status === 0 ? "Network Error" : res.statusText
-    var props = {request: Request && new Request(url, opts), response: res}
-    throw new FetchError(res.status, msg, props)
-  }
-  else return res
+  if (!isErrorResponse(res)) return res
+
+  // https://fetch.spec.whatwg.org/#concept-network-error
+  var Request = fetch.Request || global.Request
+  var msg = res.status === 0 ? "Network Error" : res.statusText
+  var props = {request: Request && new Request(url, opts), response: res}
+  throw new FetchError(res.status, msg, props)
 }
 
 function errorifyError(fetch, url, opts, err) {
@@ -29,6 +28,10 @@ function errorifyError(fetch, url, opts, err) {
     })
   }
   else throw err
+}
+
+function isErrorResponse(res) {
+  return res.type === "error" || res.status >= 400 && res.status < 600
 }
 
 function assign(target, source) {
