@@ -21,6 +21,12 @@ describe("ErrorifyFetch", function() {
     ;(yield res.text()).must.equal("Hello")
   })
 
+  it("must return fetch with Headers, Request and Response", function() {
+    fetch.Headers.must.equal(Fetch.Headers)
+    fetch.Request.must.equal(Fetch.Request)
+    fetch.Response.must.equal(Fetch.Response)
+  })
+
   it("must reject with FetchError if 400 Bad Request", function*() {
     var res = fetch("/")
     this.requests[0].respond(400, {}, "")

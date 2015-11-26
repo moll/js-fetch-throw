@@ -1,10 +1,16 @@
 var FetchError = require("./fetch_error")
 
-module.exports = Function.bind.bind(function(fetch, url, opts) {
-  var onResolve = errorify.bind(null, fetch, url, opts)
-  var onReject = onError.bind(null, fetch, url, opts)
-  return fetch(url, opts).then(onResolve, onReject)
-}, null)
+module.exports = function(fetch) {
+  function fetchWithError(url, opts) {
+    var onResolve = errorify.bind(null, fetch, url, opts)
+    var onReject = onError.bind(null, fetch, url, opts)
+    return fetch(url, opts).then(onResolve, onReject)
+  }
+
+  for (var key in fetch) fetchWithError[key] = fetch[key]
+
+  return fetchWithError
+}
 
 function errorify(fetch, url, opts, res) {
   if (res.status >= 400 && res.status < 600) {

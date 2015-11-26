@@ -3,6 +3,9 @@
 - Adds the `request` property (an instance of [`Request`][]) with details of the
   request to the error.
 - Rejects with `FetchError` also for network errors.
+- Returns a new `fetch` function with all enumerable properties carried over.  
+  Handy if the given `fetch` function contains the otherwise global `Headers`,
+  `Request` and `Response` objects.
 
 [`Request`]: https://developer.mozilla.org/en-US/docs/Web/API/Request
 
