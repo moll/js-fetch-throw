@@ -63,4 +63,23 @@ describe("ErrorifyFetch", function() {
     err.request.url.must.equal("/nonexistent")
     err.request.headers.get("Accept").must.equal("application/vnd.x")
   })
+
+  it("must reject with FetchError if network fails", function*() {
+    var res = fetch("/nonexistent", {headers: {"Accept": "application/vnd.x"}})
+    this.requests[0].respond(600, {}, "Lost it. :(")
+
+    var err
+    try { yield res } catch (ex) { err = ex }
+    err.must.be.an.error(FetchError, "Network request failed")
+    err.code.must.equal(-1)
+    err.must.have.enumerable("error")
+    err.error.must.be.an.error(TypeError, "Network request failed")
+
+    err.must.have.nonenumerable("request")
+    err.must.not.have.property("response")
+
+    err.request.must.be.an.instanceof(Fetch.Request)
+    err.request.url.must.equal("/nonexistent")
+    err.request.headers.get("Accept").must.equal("application/vnd.x")
+  })
 })
