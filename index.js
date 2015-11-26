@@ -1,12 +1,14 @@
-var HttpError = require("standard-http-error")
+var FetchError = require("./fetch_error")
 
 module.exports = Function.bind.bind(function(fetch, url, opts) {
-  return fetch(url, opts).then(errorify)
+  return fetch(url, opts).then(errorify.bind(null, fetch, url, opts))
 }, null)
 
-function errorify(res) {
-  if (res.status >= 400 && res.status < 600)
-    throw new HttpError(res.status, res.statusText, {response: res})
-  else
-    return res
+function errorify(fetch, url, opts, res) {
+  if (res.status >= 400 && res.status < 600) {
+    var Request = fetch.Request || global.Request
+    var props = {request: Request && new Request(url, opts), response: res}
+    throw new FetchError(res.status, res.statusText, props)
+  }
+  else return res
 }
