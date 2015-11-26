@@ -1,4 +1,4 @@
-var FetchError = require("./fetch_error")
+var FetchError = require("fetch-error")
 
 module.exports = function(fetch) {
   return assign(function(url, opts) {

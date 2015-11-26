@@ -26,7 +26,7 @@
 	"scripts": {"test": "make test"},
 
 	"dependencies": {
-		"standard-http-error": ">= 1.0.0 < 2"
+		"fetch-error": ">= 1.0.0 < 2"
 	},
 
 	"devDependencies": {
