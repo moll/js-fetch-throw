@@ -9,13 +9,12 @@ module.exports = function(fetch) {
 }
 
 function errorifyResponse(fetch, url, opts, res) {
-  if (res.status >= 400 && res.status < 600) {
+  if (res.type === "error" || res.status >= 400 && res.status < 600) {
+    // https://fetch.spec.whatwg.org/#concept-network-error
     var Request = fetch.Request || global.Request
-
-    throw new FetchError(res.status, res.statusText, {
-      request: Request && new Request(url, opts),
-      response: res
-    })
+    var msg = res.status === 0 ? "Network Error" : res.statusText
+    var props = {request: Request && new Request(url, opts), response: res}
+    throw new FetchError(res.status, msg, props)
   }
   else return res
 }
