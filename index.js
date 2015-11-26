@@ -1,15 +1,11 @@
 var FetchError = require("./fetch_error")
 
 module.exports = function(fetch) {
-  function fetchWithError(url, opts) {
+  return assign(function(url, opts) {
     var onResolve = errorifyResponse.bind(null, fetch, url, opts)
     var onReject = errorifyError.bind(null, fetch, url, opts)
     return fetch(url, opts).then(onResolve, onReject)
-  }
-
-  for (var key in fetch) fetchWithError[key] = fetch[key]
-
-  return fetchWithError
+  }, fetch)
 }
 
 function errorifyResponse(fetch, url, opts, res) {
@@ -34,4 +30,9 @@ function errorifyError(fetch, url, opts, err) {
     })
   }
   else throw err
+}
+
+function assign(target, source) {
+  for (var key in source) target[key] = source[key]
+  return target
 }
