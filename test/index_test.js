@@ -27,9 +27,8 @@ describe("ErrorifyFetch", function() {
 
     var err
     try { yield res } catch (ex) { err = ex }
-    err.must.be.an.instanceof(FetchError)
+    err.must.be.an.error(FetchError, "Bad Request")
     err.code.must.equal(400)
-    err.message.must.equal("Bad Request")
   })
 
   it("must reject with FetchError if 500 Internal Server Error", function*() {
@@ -38,9 +37,8 @@ describe("ErrorifyFetch", function() {
 
     var err
     try { yield res } catch (ex) { err = ex }
-    err.must.be.an.instanceof(FetchError)
+    err.must.be.an.error(FetchError, "Internal Server Error")
     err.code.must.equal(500)
-    err.message.must.equal("Internal Server Error")
   })
 
   it("must assign response on FetchError if a non-OK response", function*() {
