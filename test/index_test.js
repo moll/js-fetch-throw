@@ -10,7 +10,13 @@ describe("ErrorifyFetch", function() {
     xhr.onCreate = Array.prototype.push.bind(this.requests = [])
   })
 
-  it("must request", function*() {
+  it("must return fetch with Headers, Request and Response", function() {
+    fetch.Headers.must.equal(Fetch.Headers)
+    fetch.Request.must.equal(Fetch.Request)
+    fetch.Response.must.equal(Fetch.Response)
+  })
+
+  it("must request and resolve if 200 OK", function*() {
     var res = fetch("/models", {method: "POST"})
     this.requests[0].method.must.equal("POST")
     this.requests[0].url.must.equal("/models")
@@ -21,10 +27,15 @@ describe("ErrorifyFetch", function() {
     ;(yield res.text()).must.equal("Hello")
   })
 
-  it("must return fetch with Headers, Request and Response", function() {
-    fetch.Headers.must.equal(Fetch.Headers)
-    fetch.Request.must.equal(Fetch.Request)
-    fetch.Response.must.equal(Fetch.Response)
+  it("must request and resolve if 303 See Other", function*() {
+    var res = fetch("/models", {method: "POST"})
+    this.requests[0].method.must.equal("POST")
+    this.requests[0].url.must.equal("/models")
+
+    this.requests[0].respond(303, {Location: "/models/1"})
+    res = yield res
+    res.status.must.equal(303)
+    res.headers.get("location").must.equal("/models/1")
   })
 
   it("must reject with FetchError if 400 Bad Request", function*() {
