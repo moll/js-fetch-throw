@@ -1,8 +1,7 @@
 var Sinon = require("sinon")
 var Fetch = require("./fetch")
 var FetchError = require("fetch-error")
-var ErrorifyFetch = require("..")
-var fetch = ErrorifyFetch(Fetch)
+var fetch = require("..")(Fetch)
 
 describe("ErrorifyFetch", function() {
   beforeEach(function() {
