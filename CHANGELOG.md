@@ -1,4 +1,4 @@
-## Unreleased
+## 0.2.0 (Dec 9, 2015)
 - Rejects with `FetchError` instead of `HttpError`.
 - Adds the `request` property (an instance of [`Request`][]) with details of the
   request to the error.
