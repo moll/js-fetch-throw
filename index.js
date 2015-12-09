@@ -1,11 +1,13 @@
 var FetchError = require("fetch-error")
 
-module.exports = function(fetch) {
-  return assign(function(url, opts) {
-    var onResolve = errorifyResponse.bind(null, fetch, url, opts)
-    var onReject = errorifyError.bind(null, fetch, url, opts)
-    return fetch(url, opts).then(onResolve, onReject)
-  }, fetch)
+exports = module.exports = function(fetch) {
+  return assign(exports.fetch.bind(null, fetch), fetch)
+}
+
+exports.fetch = function(fetch, url, opts) {
+  var onResolve = errorifyResponse.bind(null, fetch, url, opts)
+  var onReject = errorifyError.bind(null, fetch, url, opts)
+  return fetch(url, opts).then(onResolve, onReject)
 }
 
 function errorifyResponse(fetch, url, opts, res) {
