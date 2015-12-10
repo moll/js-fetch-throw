@@ -5,22 +5,24 @@ exports = module.exports = function(fetch) {
 }
 
 exports.fetch = function(fetch, url, opts) {
-  var onResolve = errorifyResponse.bind(null, fetch, url, opts)
-  var onReject = errorifyError.bind(null, fetch, url, opts)
-  return fetch(url, opts).then(onResolve, onReject)
+  var onResponse = exports.onResponse.bind(null, fetch, url, opts)
+  var onError = exports.onError.bind(null, fetch, url, opts)
+  return fetch(url, opts).then(onResponse, onError)
 }
 
-function errorifyResponse(fetch, url, opts, res) {
+exports.onResponse = function(fetch, url, opts, res) {
   if (!isErrorResponse(res)) return res
 
   // https://fetch.spec.whatwg.org/#concept-network-error
   var Request = fetch.Request || global.Request
   var msg = res.status === 0 ? "Network Error" : res.statusText
-  var props = {request: Request && new Request(url, opts), response: res}
-  throw new FetchError(res.status, msg, props)
+
+  throw new FetchError(res.status, msg, {
+    request: Request && new Request(url, opts), response: res
+  })
 }
 
-function errorifyError(fetch, url, opts, err) {
+exports.onError = function(fetch, url, opts, err) {
   var Request = fetch.Request || global.Request
 
   throw new FetchError(0, err.message, {
