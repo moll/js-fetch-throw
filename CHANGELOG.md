@@ -1,4 +1,5 @@
-## Unreleased
+## 0.3.0 (Dec 10, 2015)
+- Renames to `FetchThrow`.
 - Rejects all errors with `FetchError`.
 
 ## 0.2.0 (Dec 9, 2015)
