@@ -1,10 +1,10 @@
 var Sinon = require("sinon")
 var Fetch = require("./fetch")
 var FetchError = require("fetch-error")
-var FetchErrorify = require("..")
-var fetch = FetchErrorify(Fetch)
+var FetchThrow = require("..")
+var fetch = FetchThrow(Fetch)
 
-describe("ErrorifyFetch", function() {
+describe("FetchThrow", function() {
   beforeEach(function() {
     var xhr = global.XMLHttpRequest = Sinon.FakeXMLHttpRequest
     xhr.onCreate = Array.prototype.push.bind(this.requests = [])
@@ -102,7 +102,7 @@ describe("ErrorifyFetch", function() {
 
   it("must reject with FetchError if fetch rejects with syntax error",
     function*() {
-    var fetchWithParse = FetchErrorify(function(url, opts) {
+    var fetchWithParse = FetchThrow(function(url, opts) {
       return fetch(url, opts).then((res) => res.json())
     })
 

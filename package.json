@@ -1,10 +1,10 @@
 {
-	"name": "@moll/fetch-errorify",
+	"name": "@moll/fetch-throw",
 	"version": "0.2.0",
 	"description": "",
 	"keywords": [],
-	"homepage": "https://github.com/moll/js-fetch-errorify",
-	"bugs": "https://github.com/moll/js-fetch-errorify/issues",
+	"homepage": "https://github.com/moll/js-fetch-throw",
+	"bugs": "https://github.com/moll/js-fetch-throw/issues",
 
 	"author": {
 		"name": "Andri Möll",
@@ -14,12 +14,12 @@
 
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/moll/js-fetch-errorify.git"
+		"url": "git://github.com/moll/js-fetch-throw.git"
 	},
 
 	"licenses": [{
 		"type": "LAGPL",
-		"url": "https://github.com/moll/js-fetch-errorify/blob/master/LICENSE"
+		"url": "https://github.com/moll/js-fetch-throw/blob/master/LICENSE"
 	}],
 
 	"main": "index.js",
