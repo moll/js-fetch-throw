@@ -102,13 +102,14 @@ describe("FetchThrow", function() {
 
   it("must reject with FetchError if fetch rejects with syntax error",
     function*() {
-    var fetchWithParse = FetchThrow(function(url, opts) {
+    var fetchWithParse = assign(function(url, opts) {
       return fetch(url, opts).then((res) => res.json())
-    })
+    }, Fetch)
 
-    var res = fetchWithParse("/nonexistent")
-    var headers = {"Content-Type": "application/json"}
-    this.requests[0].respond(200, headers, "{\"foo\": ")
+    var reqHeaders = {"Accept": "application/vnd.x"}
+    var res = FetchThrow(fetchWithParse)("/nonexistent", {headers: reqHeaders})
+    var resHeaders = {"Content-Type": "application/json"}
+    this.requests[0].respond(200, resHeaders, "{\"foo\": ")
 
     var err
     try { yield res } catch (ex) { err = ex }
@@ -116,5 +117,14 @@ describe("FetchThrow", function() {
     err.code.must.equal(0)
     err.must.have.enumerable("error")
     err.error.must.be.an.error(SyntaxError, "Unexpected end of input")
+
+    err.request.must.be.an.instanceof(Fetch.Request)
+    err.request.url.must.equal("/nonexistent")
+    err.request.headers.get("Accept").must.equal("application/vnd.x")
   })
 })
+
+function assign(target, source) {
+  for (var key in source) target[key] = source[key]
+  return target
+}
