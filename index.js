@@ -21,15 +21,12 @@ function errorifyResponse(fetch, url, opts, res) {
 }
 
 function errorifyError(fetch, url, opts, err) {
-  if (err instanceof TypeError) {
-    var Request = fetch.Request || global.Request
+  var Request = fetch.Request || global.Request
 
-    throw new FetchError(0, err.message, {
-      request: Request && new Request(url, opts),
-      error: err
-    })
-  }
-  else throw err
+  throw new FetchError(0, err.message, {
+    request: Request && new Request(url, opts),
+    error: err
+  })
 }
 
 function isErrorResponse(res) {

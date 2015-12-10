@@ -1,7 +1,8 @@
 var Sinon = require("sinon")
 var Fetch = require("./fetch")
 var FetchError = require("fetch-error")
-var fetch = require("..")(Fetch)
+var FetchErrorify = require("..")
+var fetch = FetchErrorify(Fetch)
 
 describe("ErrorifyFetch", function() {
   beforeEach(function() {
@@ -97,5 +98,23 @@ describe("ErrorifyFetch", function() {
     err.request.must.be.an.instanceof(Fetch.Request)
     err.request.url.must.equal("/nonexistent")
     err.request.headers.get("Accept").must.equal("application/vnd.x")
+  })
+
+  it("must reject with FetchError if fetch rejects with syntax error",
+    function*() {
+    var fetchWithParse = FetchErrorify(function(url, opts) {
+      return fetch(url, opts).then((res) => res.json())
+    })
+
+    var res = fetchWithParse("/nonexistent")
+    var headers = {"Content-Type": "application/json"}
+    this.requests[0].respond(200, headers, "{\"foo\": ")
+
+    var err
+    try { yield res } catch (ex) { err = ex }
+    err.must.be.an.error(FetchError, "Unexpected end of input")
+    err.code.must.equal(0)
+    err.must.have.enumerable("error")
+    err.error.must.be.an.error(SyntaxError, "Unexpected end of input")
   })
 })
