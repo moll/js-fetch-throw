@@ -122,6 +122,22 @@ describe("FetchThrow", function() {
     err.request.url.must.equal("/nonexistent")
     err.request.headers.get("Accept").must.equal("application/vnd.x")
   })
+
+  // This could happen if the initial failure was also caused by Request
+  // throwing.
+  it("must not reject with FetchError if Request create fails", function*() {
+    var fetchWithError = assign(function() {
+      return Promise.reject(new RangeError("Invalid URL"))
+    }, Fetch)
+
+    fetchWithError.Request = function() {
+      throw new RangeError("Invalid Everything")
+    }
+
+    var err
+    try { yield FetchThrow(fetchWithError)("/")} catch (ex) { err = ex }
+    err.must.be.an.error(RangeError, "Invalid URL")
+  })
 })
 
 function assign(target, source) {

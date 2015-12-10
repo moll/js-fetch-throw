@@ -14,21 +14,20 @@ exports.onResponse = function(fetch, url, opts, res) {
   if (!isErrorResponse(res)) return res
 
   // https://fetch.spec.whatwg.org/#concept-network-error
-  var Request = fetch.Request || global.Request
   var msg = res.status === 0 ? "Network Error" : res.statusText
 
-  throw new FetchError(res.status, msg, {
-    request: Request && new Request(url, opts), response: res
-  })
+  // Creating a Request cannot fail at this point as the request wouldn't have
+  // otherwise gone through.
+  var Request = fetch.Request || global.Request
+  var req = Request && new Request(url, opts)
+  throw new FetchError(res.status, msg, {request: req, response: res})
 }
 
 exports.onError = function(fetch, url, opts, err) {
   var Request = fetch.Request || global.Request
-
-  throw new FetchError(0, err.message, {
-    request: Request && new Request(url, opts),
-    error: err
-  })
+  var req
+  try { req = new Request(url, opts) } catch (ex) { throw err }
+  throw new FetchError(0, err.message, {request: req, error: err})
 }
 
 function isErrorResponse(res) {

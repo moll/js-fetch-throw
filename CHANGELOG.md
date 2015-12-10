@@ -1,3 +1,6 @@
+## Unreleased
+- Fixes throwing a `FetchError` if creating a `Fetch.Request` itself throws.
+
 ## 0.3.0 (Dec 10, 2015)
 - Renames to `FetchThrow`.
 - Rejects all errors with `FetchError`.
