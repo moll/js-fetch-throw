@@ -1,5 +1,5 @@
 ## 0.3.1 (Dec 10, 2015)
-- Fixes throwing a `FetchError` if creating a `Fetch.Request` itself throws.
+- Fixes throwing a `FetchError` if creating a [`Request`][] itself throws.
 
 ## 0.3.0 (Dec 10, 2015)
 - Renames to `FetchThrow`.
