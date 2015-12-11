@@ -1,3 +1,9 @@
+## Unreleased
+- Sets `response` on `FetchError` if `fetch` rejects with an error that has it
+  set.  
+  That's useful if middleware before FetchThrow.js tried to parse the JSON
+  response, but threw a `SyntaxError`.
+
 ## 0.3.1 (Dec 10, 2015)
 - Fixes throwing a `FetchError` if creating a [`Request`][] itself throws.
 

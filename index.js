@@ -27,7 +27,8 @@ exports.onError = function(fetch, url, opts, err) {
   var Request = fetch.Request || global.Request
   var req
   try { req = new Request(url, opts) } catch (ex) { throw err }
-  throw new FetchError(0, err.message, {request: req, error: err})
+  var props = {request: req, response: err.response, error: err}
+  throw new FetchError(0, err.message, props)
 }
 
 function isErrorResponse(res) {
