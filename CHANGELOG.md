@@ -1,4 +1,4 @@
-## Unreleased
+## 0.3.2 (Dec 11, 2015)
 - Sets `response` on `FetchError` if `fetch` rejects with an error that has it
   set.  
   That's useful if middleware before FetchThrow.js tried to parse the JSON
