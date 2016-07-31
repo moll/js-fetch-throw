@@ -1,3 +1,6 @@
+## 1.0.0 (Jul 31, 2016)
+- Go and prosper!
+
 ## 0.3.2 (Dec 11, 2015)
 - Sets `response` on `FetchError` if `fetch` rejects with an error that has it
   set.  
