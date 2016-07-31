@@ -167,6 +167,12 @@ describe("FetchThrow", function() {
     try { yield FetchThrow(fetchWithError)("/")} catch (ex) { err = ex }
     err.must.be.an.error(RangeError, "Invalid URL")
   })
+
+  describe(".FetchError", function() {
+    it("must be FetchError", function() {
+      FetchThrow.FetchError.must.equal(FetchError)
+    })
+  })
 })
 
 function assign(target, source) {

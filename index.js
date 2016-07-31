@@ -4,6 +4,8 @@ exports = module.exports = function(fetch) {
   return assign(exports.fetch.bind(null, fetch), fetch)
 }
 
+exports.FetchError = FetchError
+
 exports.fetch = function(fetch, url, opts) {
   var onResponse = exports.onResponse.bind(null, fetch, url, opts)
   var onError = exports.onError.bind(null, fetch, url, opts)
