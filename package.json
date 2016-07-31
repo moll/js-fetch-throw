@@ -1,5 +1,5 @@
 {
-	"name": "@moll/fetch-throw",
+	"name": "fetch-throw",
 	"version": "0.3.2",
 	"description": "A Fetch API mixin to throw FetchError when the request fails or response has an error.",
 	"keywords": [
