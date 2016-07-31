@@ -1,8 +1,14 @@
 {
 	"name": "@moll/fetch-throw",
 	"version": "0.3.2",
-	"description": "",
-	"keywords": [],
+	"description": "A Fetch API mixin to throw FetchError when the request fails or response has an error.",
+	"keywords": [
+		"error",
+		"errors",
+		"exception",
+		"fetch",
+		"http"
+	],
 	"homepage": "https://github.com/moll/js-fetch-throw",
 	"bugs": "https://github.com/moll/js-fetch-throw/issues",
 
