@@ -7,12 +7,12 @@ exports = module.exports = function(fetch) {
 exports.FetchError = FetchError
 
 exports.fetch = function(fetch, url, opts) {
-  var onResponse = exports.onResponse.bind(null, fetch, url, opts)
-  var onError = exports.onError.bind(null, fetch, url, opts)
-  return fetch(url, opts).then(onResponse, onError)
+  var boundOnResponse = onResponse.bind(null, fetch, url, opts)
+  var boundOnError = onError.bind(null, fetch, url, opts)
+  return fetch(url, opts).then(boundOnResponse, boundOnError)
 }
 
-exports.onResponse = function(fetch, url, opts, res) {
+function onResponse(fetch, url, opts, res) {
   if (!isErrorResponse(res)) return res
 
   // https://fetch.spec.whatwg.org/#concept-network-error
@@ -25,7 +25,7 @@ exports.onResponse = function(fetch, url, opts, res) {
   throw new FetchError(res.status, msg, {request: req, response: res})
 }
 
-exports.onError = function(fetch, url, opts, err) {
+function onError(fetch, url, opts, err) {
   var Request = fetch.Request || global.Request
   var req
   try { req = new Request(url, opts) } catch (ex) { throw err }
