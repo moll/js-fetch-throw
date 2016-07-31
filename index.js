@@ -35,7 +35,4 @@ function isErrorResponse(res) {
   return res.type === "error" || res.status >= 400 && res.status < 600
 }
 
-function assign(target, source) {
-  for (var key in source) target[key] = source[key]
-  return target
-}
+function assign(a, b) { for (var k in b) a[k] = b[k]; return a }
