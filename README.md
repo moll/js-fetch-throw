@@ -29,6 +29,8 @@ npm dedupe fetch-error
 
 Using
 -----
+Wrap the native `fetch` function with the one from FetchThrow.js:
+
 ```javascript
 var fetch = require("fetch-throw")(global.fetch)
 ```
@@ -57,6 +59,22 @@ res.catch(function(err) {
 In case of unexpected errors (such as network name lookup failures) thrown by `fetch` before a request is made, `res` will also be rejected with an instance of `FetchError`. This allows you to identify failed requests for logging, for example, as shown above.
 
 For a description of properties on the error, see below.
+
+### Browser
+Browsers have the Fetch API available at `window.fetch`:
+
+```javascript
+var fetch = require("fetch-throw")(window.fetch)
+fetch("/models/42")
+```
+
+### Node.js
+Node.js doesn't have a built-in implementation of the Fetch API, but you can use any library with a compatible interface, such as [node-fetch](https://github.com/bitinn/node-fetch):
+
+```javascript
+var fetch = require("fetch-throw")(require("node-fetch"))
+fetch("/models/42")
+```
 
 ### Properties on an instance of FetchError
 
