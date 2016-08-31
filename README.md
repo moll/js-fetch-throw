@@ -69,7 +69,10 @@ fetch("/models/42")
 ```
 
 ### Node.js
-Node.js doesn't have a built-in implementation of the Fetch API, but you can use any library with a compatible interface, such as [node-fetch](https://github.com/bitinn/node-fetch):
+Node.js doesn't have a built-in implementation of the Fetch API, but you can use any library with a compatible interface, such as my [Fetch/Off.js][fetch-off] or [node-fetch][node-fetch]:
+
+[fetch-off]: https://github.com/moll/node-fetch-off
+[node-fetch]: https://github.com/bitinn/node-fetch
 
 ```javascript
 var fetch = require("fetch-throw")(require("node-fetch"))
