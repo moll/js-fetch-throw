@@ -1,4 +1,4 @@
-## Unreleased
+## 1.0.1 (Nov 17, 2016)
 - Handles lack of `Request` class better.  
   This could happen if there's a minimal Fetch API implementation, such as my [Fetch/Off.js][fetch-off].
 

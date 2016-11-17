@@ -1,6 +1,6 @@
 {
 	"name": "fetch-throw",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Fetch API mixin to throw FetchError when the request fails or response has an error.",
 	"keywords": [
 		"error",
