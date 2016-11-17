@@ -1,3 +1,9 @@
+## Unreleased
+- Handles lack of `Request` class better.  
+  This could happen if there's a minimal Fetch API implementation, such as my [Fetch/Off.js][fetch-off].
+
+[fetch-off]: https://github.com/moll/node-fetch-off
+
 ## 1.0.0 (Jul 31, 2016)
 - Go and prosper!
 

@@ -2,6 +2,7 @@ var Sinon = require("sinon")
 var Fetch = require("./fetch")
 var FetchError = require("fetch-error")
 var FetchThrow = require("..")
+var assign = require("oolong").assign
 var fetch = FetchThrow(Fetch)
 
 describe("FetchThrow", function() {
@@ -70,6 +71,18 @@ describe("FetchThrow", function() {
     err.request.headers.get("Accept").must.equal("application/vnd.x")
   })
 
+  it("must skip request on FetchError if a non-OK response but no Request",
+    function*() {
+    var fetch = FetchThrow(assign(Fetch.bind(), Fetch, {Request: undefined}))
+    var res = fetch("/nonexistent", {headers: {"Accept": "application/vnd.x"}})
+    this.requests[0].respond(404, {}, "Lost it. :(")
+
+    var err
+    try { yield res } catch (ex) { err = ex }
+    err.must.be.an.error(FetchError, "Not Found")
+    err.must.have.property("request", undefined)
+  })
+
   it("must assign response on FetchError if a non-OK response", function*() {
     var res = fetch("/nonexistent")
     this.requests[0].respond(404, {}, "Lost it. :(")
@@ -101,16 +114,14 @@ describe("FetchThrow", function() {
   })
 
   it("must reject with FetchError on rejection", function*() {
-    var fetchWithError = assign(function(url, opts) {
-      return fetch(url, opts).then(() => { throw new RangeError("Too far") })
-    }, Fetch)
+    function fetch() { return Promise.reject(new RangeError("Too far")) }
+    var fetchWithError = FetchThrow(assign(fetch, Fetch))
 
     var reqHeaders = {"Accept": "application/vnd.x"}
-    var res = FetchThrow(fetchWithError)("/nonexistent", {headers: reqHeaders})
-    this.requests[0].respond(200, {}, "")
-
     var err
-    try { yield res } catch (ex) { err = ex }
+    try { yield fetchWithError("/nonexistent", {headers: reqHeaders}) }
+    catch (ex) { err = ex }
+
     err.must.be.an.error(FetchError, "Too far")
     err.code.must.equal(0)
     err.must.have.enumerable("error")
@@ -123,9 +134,9 @@ describe("FetchThrow", function() {
 
   it("must reject with FetchError on rejection given error with response",
     function*() {
-    var fetchWithError = assign(function(url, opts) {
+    var fetchWithError = FetchThrow(assign(function(url, opts) {
       return fetch(url, opts).then(raise)
-    }, Fetch)
+    }, Fetch))
 
     function raise(res) {
       var err = new RangeError("Too far")
@@ -134,7 +145,7 @@ describe("FetchThrow", function() {
     }
 
     var reqHeaders = {"Accept": "application/vnd.x"}
-    var res = FetchThrow(fetchWithError)("/nonexistent", {headers: reqHeaders})
+    var res = fetchWithError("/nonexistent", {headers: reqHeaders})
     this.requests[0].respond(204, {}, "")
 
     var err
@@ -152,20 +163,30 @@ describe("FetchThrow", function() {
     err.response.status.must.equal(204)
   })
 
+  it("must reject with FetchError on rejection if no Request", function*() {
+    function fetch() { return Promise.reject(new SyntaxError("End of input")) }
+    var fetchWithError = FetchThrow(assign(fetch, Fetch, {Request: undefined}))
+
+    var err
+    try { yield fetchWithError("/")} catch (ex) { err = ex }
+    err.must.be.an.error(FetchError, "End of input")
+    err.code.must.equal(0)
+    err.must.have.enumerable("error")
+    err.error.must.be.an.error(SyntaxError, "End of input")
+
+    err.must.have.property("request", undefined)
+  })
+
   // This could happen if the initial failure was also caused by Request
   // throwing.
   it("must not reject with FetchError if Request create fails", function*() {
-    var fetchWithError = assign(function() {
-      return Promise.reject(new RangeError("Invalid URL"))
-    }, Fetch)
-
-    fetchWithError.Request = function() {
-      throw new RangeError("Invalid Everything")
-    }
+    function fetch() { return Promise.reject(new RangeError("Promised URL")) }
+    function Request() { throw new RangeError("Invalid URL") }
+    var fetchWithError = FetchThrow(assign(fetch, Fetch, {Request: Request}))
 
     var err
-    try { yield FetchThrow(fetchWithError)("/")} catch (ex) { err = ex }
-    err.must.be.an.error(RangeError, "Invalid URL")
+    try { yield fetchWithError("/")} catch (ex) { err = ex }
+    err.must.be.an.error(RangeError, "Promised URL")
   })
 
   describe(".FetchError", function() {
@@ -174,8 +195,3 @@ describe("FetchThrow", function() {
     })
   })
 })
-
-function assign(target, source) {
-  for (var key in source) target[key] = source[key]
-  return target
-}

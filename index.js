@@ -26,9 +26,9 @@ function onResponse(fetch, url, opts, res) {
 }
 
 function onError(fetch, url, opts, err) {
-  var Request = fetch.Request || global.Request
   var req
-  try { req = new Request(url, opts) } catch (ex) { throw err }
+  var Request = fetch.Request || global.Request
+  if (Request) try { req = new Request(url, opts) } catch (ex) { throw err }
   var props = {request: req, response: err.response, error: err}
   throw new FetchError(0, err.message, props)
 }
